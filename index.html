@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>海绵宝宝的个人主页</title>
+  <style>
+    /* ===== 基础设置 ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: linear-gradient(180deg, #7ed8f0 0%, #4fb8e8 40%, #2a8fd4 100%);
+      min-height: 100vh;
+      color: #333;
+      overflow-x: hidden;
+    }
+    /* ===== 海底气泡背景 ===== */
+    .bubbles { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .bubble {
+      position: absolute; bottom: -60px; background: rgba(255,255,255,0.35);
+      border-radius: 50%; animation: rise linear infinite;
+    }
+    @keyframes rise { to { transform: translateY(-110vh); opacity: 0; } }
+
+    /* ===== 顶部导航 ===== */
+    nav {
+      position: relative; z-index: 2;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 6%; background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(8px);
+    }
+    .logo { font-size: 22px; font-weight: bold; color: #fff; text-shadow: 2px 2px 0 #1a6ea8; }
+    .logo span { color: #ffe135; }
+    nav a { color: #fff; text-decoration: none; margin-left: 22px; font-size: 15px; }
+    nav a:hover { color: #ffe135; }
+
+    /* ===== 主内容卡片 ===== */
+    .wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; padding: 40px 20px 60px; }
+    .hero {
+      background: #fffdf5; border-radius: 28px; padding: 40px;
+      display: flex; align-items: center; gap: 40px; flex-wrap: wrap;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      border: 5px solid #ffe135;
+    }
+    .hero-text { flex: 1; min-width: 240px; }
+    .hero-text h1 { font-size: 40px; color: #e8a900; margin-bottom: 12px; }
+    .hero-text p { font-size: 18px; line-height: 1.8; color: #555; }
+    .tag {
+      display: inline-block; margin-top: 18px; padding: 8px 18px;
+      background: #ffe135; border-radius: 30px; font-weight: bold; color: #6b4e00;
+    }
+
+    /* ===== 海绵宝宝 CSS 画像 ===== */
+    .sponge { width: 220px; height: 220px; position: relative; flex-shrink: 0; margin: 0 auto; }
+    .sponge-body {
+      position: absolute; inset: 0; background: #ffe135; border-radius: 12px;
+      border: 4px solid #e8c400;
+    }
+    .hole { position: absolute; background: #f5d400; border-radius: 50%; }
+    .h1{width:26px;height:20px;left:24px;top:30px;} .h2{width:18px;height:14px;left:150px;top:24px;}
+    .h3{width:22px;height:18px;left:60px;top:70px;} .h4{width:14px;height:12px;left:180px;top:90px;}
+    .h5{width:20px;height:16px;left:30px;top:120px;} .h6{width:16px;height:14px;left:120px;top:44px;}
+    .eye { position: absolute; top: 78px; width: 54px; height: 54px; background: #fff; border-radius: 50%; border: 3px solid #333; }
+    .eye.left { left: 46px; } .eye.right { right: 46px; }
+    .pupil { position: absolute; top: 16px; left: 18px; width: 18px; height: 18px; background: #2b7fc4; border-radius: 50%; border: 2px solid #333; }
+    .nose { position: absolute; top: 118px; left: 104px; width: 14px; height: 30px; background: #ffe135; border: 3px solid #333; border-radius: 0 0 10px 10px; }
+    .mouth { position: absolute; top: 150px; left: 70px; width: 84px; height: 30px; border-bottom: 4px solid #333; border-radius: 0 0 60px 60px; }
+    .teeth { position: absolute; top: 150px; left: 88px; width: 48px; height: 12px; background: #fff; border: 2px solid #333; border-bottom: none; }
+    .shirt { position: absolute; bottom: 8px; left: 40px; width: 140px; height: 34px; background: #fff; border: 3px solid #333; }
+    .tie { position: absolute; bottom: 8px; left: 100px; width: 20px; height: 34px; background: #e0333a; border: 2px solid #a82028; }
+
+    /* ===== 三个小卡片 ===== */
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 20px; margin-top: 24px; }
+    .card {
+      background: #fffdf5; border-radius: 20px; padding: 26px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.14); border: 3px solid #fff;
+      transition: transform .25s;
+    }
+    .card:hover { transform: translateY(-8px); }
+    .card .icon { font-size: 38px; }
+    .card h3 { margin: 12px 0 8px; color: #e8a900; font-size: 20px; }
+    .card p { color: #666; line-height: 1.7; font-size: 15px; }
+
+    footer { text-align: center; color: #fff; padding: 20px; font-size: 14px; position: relative; z-index: 1; }
+
+    /* ===== 手机适配 ===== */
+    @media (max-width: 600px) {
+      .hero { padding: 26px; }
+      .hero-text h1 { font-size: 30px; }
+      nav a { margin-left: 12px; font-size: 13px; }
+      .logo { font-size: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 气泡背景：用 JS 生成 -->
+  <div class="bubbles" id="bubbles"></div>
+
+  <nav>
+    <div class="logo">🧽 海绵<span>宝宝</span></div>
+    <div>
+      <a href="#about">关于我</a>
+      <a href="#life">我的生活</a>
+      <a href="#contact">联系我</a>
+    </div>
+  </nav>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="sponge">
+        <div class="sponge-body">
+          <div class="hole h1"></div><div class="hole h2"></div><div class="hole h3"></div>
+          <div class="hole h4"></div><div class="hole h5"></div><div class="hole h6"></div>
+          <div class="eye left"><div class="pupil"></div></div>
+          <div class="eye right"><div class="pupil"></div></div>
+          <div class="nose"></div>
+          <div class="mouth"></div><div class="teeth"></div>
+          <div class="shirt"></div><div class="tie"></div>
+        </div>
+      </div>
+      <div class="hero-text">
+        <h1>你好，我是海绵宝宝！</h1>
+        <p>我住在比奇堡的一颗大菠萝里，在蟹堡王做汉堡。<br>
+           这是我亲手做的第一个个人网站，欢迎来参观！</p>
+        <span class="tag">😄 准备好了，我准备好了！</span>
+      </div>
+    </div>
+
+    <div class="cards" id="about">
+      <div class="card">
+        <div class="icon">🍔</div>
+        <h3>我的工作</h3>
+        <p>蟹堡王的高级厨师，最拿手的是美味蟹堡，秘方牢牢保管！</p>
+      </div>
+      <div class="card" id="life">
+        <div class="icon">🪼</div>
+        <h3>我的爱好</h3>
+        <p>抓水母！还有和派大星一起发呆、吹泡泡、开吵闹的玩笑。</p>
+      </div>
+      <div class="card" id="contact">
+        <div class="icon">📧</div>
+        <h3>联系我</h3>
+        <p>想交朋友？来比奇堡找我吧！我永远都准备好认识新朋友啦。</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>🧽 海绵宝宝的个人主页 · 用爱和技术制作</footer>
+
+  <script>
+    // 生成一串往上飘的气泡
+    const box = document.getElementById('bubbles');
+    for (let i = 0; i < 18; i++) {
+      const b = document.createElement('div');
+      b.className = 'bubble';
+      const size = Math.random() * 50 + 15;
+      b.style.width = size + 'px';
+      b.style.height = size + 'px';
+      b.style.left = Math.random() * 100 + 'vw';
+      b.style.animationDuration = (Math.random() * 8 + 6) + 's';
+      b.style.animationDelay = (Math.random() * 5) + 's';
+      box.appendChild(b);
+    }
+  </script>
+</body>
+</html>
